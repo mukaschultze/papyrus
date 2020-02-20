@@ -22,10 +22,10 @@ jobs:
       name: "Linting"
       script: npm run lint
     - stage: build
-      name: "Build production"
+      name: "Production"
       script: npm run build
     - stage: deploy
-      name: "Deploy GH pages"
+      name: "GitHub Pages"
       script: npm run build
       deploy:
         provider: pages
