@@ -14,6 +14,8 @@ stages:
 jobs:
   include:
     - stage: test
+      addons:
+        chrome: stable
       name: "Unit Tests"
       script: npm run test
     - name: "End-2-End Tests"
