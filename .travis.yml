@@ -4,18 +4,20 @@ language: node_js
 node_js:
   - '12'
 
-script:
-  - npm run test
-  - npm run e2e
-
 stages:
   - test
   - build
+  - lint
   - name: deploy
     if: branch = master
 
 jobs:
   include:
+    - stage: test
+      name: "Unit Tests"
+      script: npm run test
+    - name: "End-2-End Tests"
+      script: npm run e2e
     - stage: lint
       name: "Linting"
       script: npm run lint
@@ -27,7 +29,6 @@ jobs:
       script: npm run build
       deploy:
         provider: pages
-        skip_cleanup: true
         github_token: $GITHUB_TOKEN  # Set in the settings page of your repository, as a secure variable
         keep_history: false
         local_dir: dist
