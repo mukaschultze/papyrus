@@ -19,7 +19,7 @@ jobs:
       name: "Unit Tests"
       script: npm run test -- --watch=false --no-progress --browsers=ChromeHeadlessNoSandbox
     - name: "End-2-End Tests"
-      script: npm run e2e -- --watch=false --no-progress --browsers=ChromeHeadlessNoSandbox
+      script: xvfb-run npm run e2e
     - stage: lint
       name: "Linting"
       script: npm run lint
