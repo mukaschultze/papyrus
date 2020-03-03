@@ -25,10 +25,10 @@ jobs:
       script: npm run lint
     - stage: build
       name: "Production"
-      script: npm run build
+      script: npm run build:ci
     - stage: deploy
       name: "GitHub Pages"
-      script: npm run build -- --base-href \"/papyrus/\"
+      script: npm run build:ci
       deploy:
         provider: pages
         skip_cleanup: true
