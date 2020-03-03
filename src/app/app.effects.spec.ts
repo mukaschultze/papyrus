@@ -5,7 +5,7 @@ import { AppEffects } from './app.effects';
 
 
 describe('AppEffects', () => {
-  let actions$: Observable<any>;
+  const actions$: Observable<any> = undefined;
   let effects: AppEffects;
 
   beforeEach(() => {
