@@ -1,10 +1,10 @@
-import { TestBed } from '@angular/core/testing';
-import { provideMockActions } from '@ngrx/effects/testing';
-import { Observable } from 'rxjs';
-import { AppEffects } from './app.effects';
+import { TestBed } from "@angular/core/testing";
+import { provideMockActions } from "@ngrx/effects/testing";
+import { Observable } from "rxjs";
+import { AppEffects } from "./app.effects";
 
 
-describe('AppEffects', () => {
+describe("AppEffects", () => {
   const actions$: Observable<any> = undefined;
   let effects: AppEffects;
 
@@ -19,7 +19,7 @@ describe('AppEffects', () => {
     effects = TestBed.inject<AppEffects>(AppEffects);
   });
 
-  it('should be created', () => {
+  it("should be created", () => {
     expect(effects).toBeTruthy();
   });
 });

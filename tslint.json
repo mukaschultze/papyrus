@@ -4,7 +4,7 @@
     "array-type": false,
     "arrow-parens": false,
     "deprecation": {
-      "severity": "warning"
+      "severity": "error"
     },
     "component-class-suffix": true,
     "contextual-lifecycle": true,
@@ -66,7 +66,12 @@
     "ordered-imports": false,
     "quotemark": [
       true,
-      "single"
+      "double"
+    ],
+    "indent": [
+      true,
+      "spaces",
+      4
     ],
     "trailing-comma": false,
     "no-conflicting-lifecycle": true,
