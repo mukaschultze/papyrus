@@ -1,0 +1,47 @@
+<ng-template let-node="node" #nodeTemplate>
+    <div [draggable]="true"
+         (dragstart)="handleDragStart($event, node);"
+         (dragover)="handleDragOver($event, node);"
+         (drop)="handleDrop($event, node);" (dragend)="handleDragEnd($event);"
+
+         [class.drop-above]="dragContext?.overNode === node && dragContext?.area === 'above'"
+         [class.drop-below]="dragContext?.overNode === node && dragContext?.area === 'below'"
+         [class.drop-center]="dragContext?.overNode === node && dragContext?.area === 'center'">
+        {{node.key}}
+    </div>
+
+    <button mat-icon-button
+            [matMenuTriggerFor]="editMenu"
+            [matMenuTriggerData]="{node: node}">
+        <mat-icon>edit</mat-icon>
+    </button>
+</ng-template>
+
+<mat-menu #editMenu="matMenu">
+    <ng-template matMenuContent let-node>
+        <button mat-menu-item (click)="addNewItem(node)">Settings</button>
+        <button mat-menu-item (click)="addNewItem(node)">Help</button>
+    </ng-template>
+</mat-menu>
+
+<mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+
+    <mat-tree-node matTreeNodeToggle matTreeNodePadding *matTreeNodeDef="let node;">
+        <button mat-icon-button disabled></button>
+        <ng-container *ngTemplateOutlet="nodeTemplate; context: {node:node}"></ng-container>
+    </mat-tree-node>
+
+    <mat-tree-node matTreeNodePadding *matTreeNodeDef="let node; when: hasChild">
+
+        <button mat-icon-button matTreeNodeToggle>
+            <mat-icon class="mat-icon-rtl-mirror">
+                {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+            </mat-icon>
+        </button>
+
+        <ng-container *ngTemplateOutlet="nodeTemplate; context: {node:node}"></ng-container>
+
+    </mat-tree-node>
+</mat-tree>
+
+<span #emptyItem></span>
