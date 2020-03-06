@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { SafeResourceUrl } from "@angular/platform-browser";
 import * as pdfMake from "pdfmake/build/pdfmake";
 import * as pdfFonts from "pdfmake/build/vfs_fonts";
-import { merge, Observable, Observer, zip } from "rxjs";
+import { merge, NEVER, Observable, Observer, zip } from "rxjs";
 import { debounceTime, filter, map, mapTo, pairwise, shareReplay, startWith, switchMap, take, tap } from "rxjs/operators";
 import { payload } from "../payload.json";
 import { report } from "../report.json";
@@ -22,12 +22,12 @@ import { localStorageSubject } from "./util";
 })
 export class AppComponent implements OnInit {
 
-    public pdfTemplate?: Observable<RootPDF>;
-    public pdfDefinition?: Observable<pdfMake.TDocumentDefinitions>;
-    public pdfBlob?: Observable<Blob>;
-    public pdfUrl?: Observable<SafeResourceUrl>;
-    public buildTime?: Observable<number>;
-    public building?: Observable<boolean>;
+    public pdfTemplate: Observable<RootPDF> = NEVER;
+    public pdfDefinition: Observable<pdfMake.TDocumentDefinitions> = NEVER;
+    public pdfBlob: Observable<Blob> = NEVER;
+    public pdfUrl: Observable<SafeResourceUrl> = NEVER;
+    public buildTime: Observable<number> = NEVER;
+    public building: Observable<boolean> = NEVER;
 
     public viewer = localStorageSubject<"iframe" | "pdf-viewer" | "ng2-pdfjs-viewer">("pdf-viewer", "iframe");
     public theme = localStorageSubject<"dark-theme" | "light-theme">("app-theme", "dark-theme");
