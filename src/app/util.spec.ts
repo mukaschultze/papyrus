@@ -82,10 +82,6 @@ describe("util.localStorageSubject", () => {
     const defaultValue = { foo: { bar: 123456 } };
     const customNewValue = { foo: { bar: 654321 } };
 
-    beforeEach(() => {
-
-    });
-
     it("should start with previous value", (done: DoneFn) => {
         localStorage.setItem(key, JSON.stringify(customNewValue));
         const subject$ = util.localStorageSubject(key, defaultValue);
