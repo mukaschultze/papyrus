@@ -20,7 +20,12 @@ import { AppComponent } from "./app.component";
 import { AppEffects } from "./app.effects";
 import { DevDirective } from "./dev-mode.directive";
 import { PdfTreeComponent } from "./pdf-tree/pdf-tree.component";
+import { reducer, reducerKey } from "./reducers";
 import { SafePipe } from "./safe.pipe";
+
+const reducers = {
+    [reducerKey]: reducer,
+};
 
 @NgModule({
     declarations: [
@@ -48,8 +53,12 @@ import { SafePipe } from "./safe.pipe";
 
         EffectsModule.forRoot([AppEffects]),
 
-        StoreModule.forRoot({}),
-        StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
+        StoreModule.forRoot(reducers, {
+            runtimeChecks: {
+                strictStateImmutability: true,
+                strictActionImmutability: true,
+            },
+        }),
 
     ],
     providers: [],
