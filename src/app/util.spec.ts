@@ -79,8 +79,8 @@ describe("util.deepClone", () => {
 describe("util.localStorageSubject", () => {
 
     const key = "localStorageSubjectTests";
-    const defaultValue = 123456;
-    const customNewValue = 654321;
+    const defaultValue = { foo: { bar: 123456 } };
+    const customNewValue = { foo: { bar: 654321 } };
 
     beforeEach(() => {
 
