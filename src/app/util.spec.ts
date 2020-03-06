@@ -120,12 +120,15 @@ describe("util.localStorageSubject", () => {
     });
 
     it("should return default value when the saved JSON is corrupted", (done: DoneFn) => {
+        spyOn(console, "error");
+
         localStorage.setItem(key, "nmwuioq;;z//-=[}{}{}mciowanouitn");
         const subject$ = util.localStorageSubject(key, defaultValue);
         subject$.pipe(
             first(),
         ).subscribe(val => {
             expect(val).toEqual(defaultValue);
+            expect(console.error).toHaveBeenCalled();
             done();
         });
     });
