@@ -17,7 +17,7 @@ export class PdfBuilder {
     );
 
     public setCurrentPdf(pdf: Element) {
-        this.dataChange.next(pdf.elements);
+        this.dataChange.next(pdf.elements || []);
     }
 
     public rebuildPdf() {
@@ -34,11 +34,16 @@ export class PdfBuilder {
         return inserting;
     }
 
-    public insertItemAsSibling(sibling: Element, inserting: Element, where: "above" | "below"): Element {
+    public insertItemAsSibling(sibling: Element, inserting: Element, where: "above" | "below"): Element | null {
         const parent = this.getParent(sibling);
 
         if (!parent) {
             console.warn(`Sibling does not have a parent, cannot insert ${where}`);
+            return null;
+        }
+
+        if (!parent.elements) {
+            console.error(`Parent is a leaf element, cannot insert ${where}`);
             return null;
         }
 
@@ -49,21 +54,21 @@ export class PdfBuilder {
         return inserting;
     }
 
-    public getParent(searching: Element, root?: Element): Element {
+    public getParent(searching: Element, root?: Element): Element | null {
 
         if (!root) {
             root = { key: "root", elements: this.data };
         }
 
         if (!root.elements || root.elements.length === 0) {
-            return undefined;
+            return null;
         }
 
         return root.elements.find((child) => child === searching) ?
             root :
             root.elements
                 .map((child) => this.getParent(searching, child))
-                .find((parent) => !!parent);
+                .find((parent) => !!parent) || null;
 
     }
 
@@ -89,13 +94,13 @@ export class PdfBuilder {
 
     }
 
-    public moveItem(moving: Element, newParent: Element): Element {
+    public moveItem(moving: Element, newParent: Element): Element | null {
         return this.deleteItem(moving) ?
             this.insertItem(newParent, moving) :
             null;
     }
 
-    public moveItemSibling(moving: Element, newSibling: Element, where: "above" | "below"): Element {
+    public moveItemSibling(moving: Element, newSibling: Element, where: "above" | "below"): Element | null {
         return this.deleteItem(moving) ?
             this.insertItemAsSibling(newSibling, moving, where) :
             null;

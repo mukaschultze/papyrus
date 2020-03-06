@@ -106,7 +106,7 @@ export class ReportsService {
             return throwError(new Error(`Property '${of}' in foreach is not an array`));
         }
 
-        const cloneElement = (value, index) => this.buildElements(elements, payload && { ...payload, [_let]: value, index }, { ...context, parent: item });
+        const cloneElement = (value: any, index: number) => this.buildElements(elements, payload && { ...payload, [_let]: value, index }, { ...context, parent: item });
 
         return from(arr).pipe(
             mergeToArray((val, idx) => cloneElement(val, idx)),
@@ -145,17 +145,15 @@ export class ReportsService {
             return throwError(new Error("Image has no URL, prop, or resource"));
         }
 
-        if (item.prop) {
-            item.url = this.getPayloadProperty(item.prop, payload, this.imageCache.placeholderImage);
-        }
+        const url = item.url || this.getPayloadProperty(item.prop!, payload, this.imageCache.placeholderImage);
 
-        return this.imageCache.addImageToVFS(item.url).pipe(
+        return this.imageCache.addImageToVFS(url).pipe(
             map((image) => ({ image })),
         );
     }
 
     @Mapper("meta")
-    private meta(item: elements.DocumentMetadata, payload: ReportPayload, { parent, pdf }: MapperContext): Observable<Content> {
+    private meta(item: elements.DocumentMetadata, payload: ReportPayload, { parent, pdf }: MapperContext): Observable<Content | undefined> {
 
         if (!item.prop) {
             console.warn("'meta' key has no 'prop' value, it will be ignored");

@@ -30,7 +30,7 @@ export class CacheService {
                 console.log("Fetching fresh data");
 
                 return this.addToCache(url).pipe(
-                    switchMapTo(this.getCachedData(url)),
+                    switchMapTo(this.getCachedData(url).pipe(map(r => r!))),
                 );
             }),
         );
@@ -60,7 +60,10 @@ export class CacheService {
                         map((deleted) => ({ key, deleted })),
                     )),
             )),
-            defaultIfEmpty([]),
+            defaultIfEmpty([] as {
+                key: string;
+                deleted: boolean;
+            }[]),
         );
 
         const clearCurrent = this.cacheStorage.pipe(

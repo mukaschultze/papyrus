@@ -22,12 +22,12 @@ import { localStorageSubject } from "./util";
 })
 export class AppComponent implements OnInit {
 
-    public pdfTemplate: Observable<RootPDF>;
-    public pdfDefinition: Observable<pdfMake.TDocumentDefinitions>;
-    public pdfBlob: Observable<Blob>;
-    public pdfUrl: Observable<SafeResourceUrl>;
-    public buildTime: Observable<number>;
-    public building: Observable<boolean>;
+    public pdfTemplate?: Observable<RootPDF>;
+    public pdfDefinition?: Observable<pdfMake.TDocumentDefinitions>;
+    public pdfBlob?: Observable<Blob>;
+    public pdfUrl?: Observable<SafeResourceUrl>;
+    public buildTime?: Observable<number>;
+    public building?: Observable<boolean>;
 
     public viewer = localStorageSubject<"iframe" | "pdf-viewer" | "ng2-pdfjs-viewer">("pdf-viewer", "iframe");
     public theme = localStorageSubject<"dark-theme" | "light-theme">("app-theme", "dark-theme");
@@ -44,8 +44,12 @@ export class AppComponent implements OnInit {
         ).subscribe(([oldTheme, newTheme]) => {
             const body = document.getElementsByTagName("body").item(0);
 
-            body.classList.remove(oldTheme);
-            body.classList.add(newTheme);
+            if (body == null) {
+                console.error("Could not find page body");
+            } else {
+                body.classList.remove(oldTheme);
+                body.classList.add(newTheme);
+            }
         });
     }
 

@@ -5,6 +5,8 @@
         "outDir": "./dist/out-tsc",
         "sourceMap": true,
         "declaration": false,
+        "strict": true,
+        "noImplicitAny": false,
         "downlevelIteration": true,
         "resolveJsonModule": true,
         "experimentalDecorators": true,

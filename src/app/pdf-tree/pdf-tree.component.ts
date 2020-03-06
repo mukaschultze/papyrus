@@ -33,7 +33,7 @@ export class PdfTreeComponent {
     private treeFlattener: MatTreeFlattener<Element, Element>;
 
     @ViewChild("emptyItem", { static: true })
-    private emptyItem: ElementRef;
+    private emptyItem?: ElementRef;
 
     constructor(
         private database: PdfBuilder,
@@ -48,13 +48,13 @@ export class PdfTreeComponent {
         });
     }
 
-    public getLevel = (node: Element) => this.contextMap.get(node).level;
+    public getLevel = (node: Element) => this.contextMap.get(node)?.level || 0;
 
-    public isExpandable = (node: Element) => this.contextMap.get(node).expandable;
+    public isExpandable = (node: Element) => this.contextMap.get(node)?.expandable || false;
 
     public getChildren = (node: Element) => node.elements;
 
-    public hasChild = (_: number, node: Element) => this.contextMap.get(node).expandable;
+    public hasChild = (_: number, node: Element) => this.contextMap.get(node)?.expandable;
 
     // Transformer to convert nested node to flat node. Record the nodes in maps for later use.
     public transformer = (node: Element, level: number) => {
@@ -77,19 +77,25 @@ export class PdfTreeComponent {
 
     public handleDragStart(event: DragEventInit, dragNode: Element) {
         // Required by Firefox (https://stackoverflow.com/questions/19055264/why-doesnt-html5-drag-and-drop-work-in-firefox)
-        event.dataTransfer.setData("foo", "bar");
-        event.dataTransfer.setDragImage(this.emptyItem.nativeElement, 0, 0);
+        event.dataTransfer?.setData("foo", "bar");
+        event.dataTransfer?.setDragImage(this.emptyItem?.nativeElement, 0, 0);
 
         this.dragContext = { dragNode };
         this.treeControl.collapse(dragNode);
     }
 
     public handleDragOver(event: DragEvent, node: Element) {
+
+        if (this.dragContext == null) {
+            console.warn("No drag context");
+            return;
+        }
+
         event.preventDefault();
 
         if (node === this.dragContext.overNode) {
             if (this.dragContext.dragNode !== node && !this.treeControl.isExpanded(node)) {
-                if ((new Date().getTime() - this.dragContext.holdTime) > EXPAND_HOLD_MS) {
+                if ((new Date().getTime() - this.dragContext.holdTime!) > EXPAND_HOLD_MS) {
                     this.treeControl.expand(node);
                 }
             }
@@ -111,10 +117,15 @@ export class PdfTreeComponent {
     }
 
     public handleDrop(event: DragEvent, node: Element) {
+        if (this.dragContext === undefined) {
+            console.warn("No drag context");
+            return;
+        }
+
         event.preventDefault();
 
         if (node !== this.dragContext.dragNode) {
-            let moved: Element;
+            let moved: Element | null = null;
 
             switch (this.dragContext.area) {
                 case "above":

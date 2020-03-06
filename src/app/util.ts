@@ -11,7 +11,7 @@ export function mergeToArray<T, O>(project: (value: T, index: number) => Observa
             .sort((a, b) => a.idx - b.idx)
             .map((a) => a.val),
         ),
-        defaultIfEmpty([]),
+        defaultIfEmpty([] as O[]),
     );
 }
 
@@ -20,7 +20,7 @@ export function deepClone<T>(value: T): T {
 }
 
 export function localStorageSubject<T>(key: string, defaultValue: T): BehaviorSubject<T> {
-    let value = null;
+    let value: T;
     const savedJson = localStorage.getItem(key);
 
     if (savedJson) {

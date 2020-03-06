@@ -83,8 +83,8 @@
         </mat-menu>
 
         <mat-menu #debugMenu="matMenu">
-            <button mat-menu-item (click)="log(this.pdfDefinition, 'pdfDefinition')">Log Definition</button>
-            <button mat-menu-item (click)="log(this.pdfTemplate, 'pdfTemplate')">Log Template</button>
+            <button mat-menu-item (click)="log(this.pdfDefinition!, 'pdfDefinition')">Log Definition</button>
+            <button mat-menu-item (click)="log(this.pdfTemplate!, 'pdfTemplate')">Log Template</button>
         </mat-menu>
 
     </mat-toolbar>

@@ -47,14 +47,14 @@ export class ImageCacheService {
 
                 if (!img.complete) {
                     img.onload = () => {
-                        observer.next(this.getBase64Image(img));
+                        observer.next(this.getBase64Image(img) || this.placeholderImage);
                         observer.complete();
                     };
                     img.onerror = (err) => {
                         observer.error(err);
                     };
                 } else {
-                    observer.next(this.getBase64Image(img));
+                    observer.next(this.getBase64Image(img) || this.placeholderImage);
                     observer.complete();
                 }
 
@@ -73,6 +73,12 @@ export class ImageCacheService {
         canvas.width = img.width;
         canvas.height = img.height;
         const ctx = canvas.getContext("2d");
+
+        if (ctx == null) {
+            console.error("Canvas get context 2D failed");
+            return undefined;
+        }
+
         ctx.drawImage(img, 0, 0);
         return canvas.toDataURL("image/png");
     }
