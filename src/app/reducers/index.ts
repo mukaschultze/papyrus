@@ -27,12 +27,13 @@ const scoreboardReducer = createReducer(
     on(EditorActions.undo, (state) => {
         state = deepClone(state);
 
-        if (state.undoStack.length === 0) {
+        const undo = state.undoStack.pop();
+
+        if (!undo) {
             console.warn("Nothing to undo");
             return state;
         }
 
-        const undo = state.undoStack.pop();
         state.redoStack.push({
             label: undo.label,
             elements: state.tree,
@@ -44,12 +45,13 @@ const scoreboardReducer = createReducer(
     on(EditorActions.redo, (state) => {
         state = deepClone(state);
 
-        if (state.redoStack.length === 0) {
+        const redo = state.redoStack.pop();
+
+        if (!redo) {
             console.warn("Nothing to redo");
             return state;
         }
 
-        const redo = state.redoStack.pop();
         state.undoStack.push({
             label: redo.label,
             elements: state.tree,
