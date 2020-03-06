@@ -1,4 +1,5 @@
-import { Directive, isDevMode, OnInit, TemplateRef, ViewContainerRef } from "@angular/core";
+import { Directive, OnInit, TemplateRef, ViewContainerRef } from "@angular/core";
+import { environment } from "../environments/environment";
 
 // tslint:disable-next-line: directive-selector
 @Directive({ selector: "[devMode]" })
@@ -12,10 +13,10 @@ export class DevDirective implements OnInit {
     ) { }
 
     public ngOnInit() {
-        if (isDevMode() && !this.hasView) {
+        if (environment.production && !this.hasView) {
             this.viewContainer.createEmbeddedView(this.templateRef);
             this.hasView = true;
-        } else if (!isDevMode() && this.hasView) {
+        } else if (!environment.production && this.hasView) {
             this.viewContainer.clear();
             this.hasView = false;
         }
