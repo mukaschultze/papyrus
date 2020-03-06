@@ -5,21 +5,22 @@ import { AppEffects } from "./app.effects";
 
 
 describe("AppEffects", () => {
-  const actions$: Observable<any> = undefined;
-  let effects: AppEffects;
+    // tslint:disable-next-line: prefer-const
+    let actions$: Observable<any>;
+    let effects: AppEffects;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [
-        AppEffects,
-        provideMockActions(() => actions$)
-      ]
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            providers: [
+                AppEffects,
+                provideMockActions(() => actions$)
+            ]
+        });
+
+        effects = TestBed.inject<AppEffects>(AppEffects);
     });
 
-    effects = TestBed.inject<AppEffects>(AppEffects);
-  });
-
-  it("should be created", () => {
-    expect(effects).toBeTruthy();
-  });
+    it("should be created", () => {
+        expect(effects).toBeTruthy();
+    });
 });
