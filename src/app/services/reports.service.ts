@@ -6,7 +6,7 @@ import * as elements from "../elements/band";
 import { mergeToArray } from "../util";
 import { ImageCacheService } from "./image-cache.service";
 
-const mappingFunctions: { [key: string]: (item: elements.Element, payload: ReportPayload, context: MapperContext) => Observable<Content | Content[]> } = {
+const mappingFunctions: { [key: string]: (item: elements.Element, payload: ReportPayload, context: MapperContext) => Observable<Content | Content[] | undefined> } = {
 };
 
 function Mapper(key?: string) {
@@ -35,7 +35,7 @@ export class ReportsService {
         return this.buildElement(template, payload, { parent: template, pdf: template }) as Observable<TDocumentDefinitions>;
     }
 
-    private buildElement(item: elements.Element, payload: ReportPayload, context: MapperContext): Observable<Content | Content[]> {
+    private buildElement(item: elements.Element, payload: ReportPayload, context: MapperContext): Observable<Content | Content[] | undefined> {
         const mapper = mappingFunctions[`${item.key}`];
 
         if (!mapper) {
@@ -53,6 +53,7 @@ export class ReportsService {
 
         return from(items).pipe(
             mergeToArray((item) => this.buildElement(item, payload, context).pipe(
+                map(i => i || []),
                 flatMap((i) => Array.isArray(i) ? i : [i]),
             )),
         );
