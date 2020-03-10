@@ -6,7 +6,7 @@ describe("util.mergeToArray", () => {
 
     it("shoud emit the ordered array", (done: DoneFn) => {
         from([1, 2, 3]).pipe(
-            util.mergeToArray(a => of(a).pipe(
+            util.mergeToArray((a) => of(a).pipe(
                 delay(100 - a * 30),
                 mapTo(a)
             )),
@@ -18,7 +18,7 @@ describe("util.mergeToArray", () => {
 
     it("shoud not freeze when observables don't emit", (done: DoneFn) => {
         from([]).pipe(
-            util.mergeToArray(a => of(a).pipe(
+            util.mergeToArray((a) => of(a).pipe(
                 delay(100 - a * 30),
                 mapTo(a)
             )),
@@ -87,7 +87,7 @@ describe("util.localStorageSubject", () => {
         const subject$ = util.localStorageSubject(key, defaultValue);
         subject$.pipe(
             first(),
-        ).subscribe(val => {
+        ).subscribe((val) => {
             expect(val).toEqual(customNewValue);
             done();
         });
@@ -98,7 +98,7 @@ describe("util.localStorageSubject", () => {
         const subject$ = util.localStorageSubject(key, defaultValue);
         subject$.pipe(
             first(),
-        ).subscribe(val => {
+        ).subscribe((val) => {
             expect(val).toEqual(defaultValue);
             done();
         });
@@ -113,7 +113,7 @@ describe("util.localStorageSubject", () => {
         const subjectB$ = util.localStorageSubject(key, defaultValue);
         subjectB$.pipe(
             first(),
-        ).subscribe(val => {
+        ).subscribe((val) => {
             expect(val).toEqual(customNewValue);
             done();
         });
@@ -126,7 +126,7 @@ describe("util.localStorageSubject", () => {
         const subject$ = util.localStorageSubject(key, defaultValue);
         subject$.pipe(
             first(),
-        ).subscribe(val => {
+        ).subscribe((val) => {
             expect(val).toEqual(defaultValue);
             expect(console.error).toHaveBeenCalled();
             done();

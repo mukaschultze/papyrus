@@ -30,7 +30,7 @@ export class CacheService {
                 console.log("Fetching fresh data");
 
                 return this.addToCache(url).pipe(
-                    switchMapTo(this.getCachedData(url).pipe(map(r => r!))),
+                    switchMapTo(this.getCachedData(url).pipe(map((r) => r!))),
                 );
             }),
         );

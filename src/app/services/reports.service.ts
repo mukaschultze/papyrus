@@ -53,7 +53,7 @@ export class ReportsService {
 
         return from(items).pipe(
             mergeToArray((item) => this.buildElement(item, payload, context).pipe(
-                map(i => i || []),
+                map((i) => i || []),
                 flatMap((i) => Array.isArray(i) ? i : [i]),
             )),
         );

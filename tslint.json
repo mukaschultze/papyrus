@@ -2,7 +2,7 @@
     "extends": "tslint:recommended",
     "rules": {
         "array-type": false,
-        "arrow-parens": false,
+        "arrow-parens": true,
         "deprecation": {
             "severity": "error"
         },
@@ -73,7 +73,7 @@
             "spaces",
             4
         ],
-        "trailing-comma": false,
+        "trailing-comma": true,
         "no-conflicting-lifecycle": true,
         "no-host-metadata-property": true,
         "no-input-rename": true,
