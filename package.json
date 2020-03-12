@@ -26,6 +26,7 @@
     "@angular/platform-browser-dynamic": "~9.0.2",
     "@angular/router": "~9.0.2",
     "@ngrx/effects": "^8.6.0",
+    "@ngrx/entity": "^9.0.0",
     "@ngrx/store": "^8.6.0",
     "@ngrx/store-devtools": "^8.6.0",
     "ng2-pdf-viewer": "^6.1.2",
