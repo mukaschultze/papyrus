@@ -1,8 +1,12 @@
 import { FlatTreeControl } from "@angular/cdk/tree";
-import { Component, ElementRef, ViewChild } from "@angular/core";
+import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import { MatTreeFlatDataSource, MatTreeFlattener } from "@angular/material/tree";
+import { Actions } from "@ngrx/effects";
+import { Store } from "@ngrx/store";
 import { Element } from "../elements/band";
 import { PdfBuilder } from "../services/pdf-builder.service";
+import * as PdfTreeActions from "./pdf-tree.actions";
+import { PdfTreeState } from "./pdf-tree.reducer";
 
 const EXPAND_HOLD_MS = 300;
 
@@ -17,7 +21,7 @@ interface NodeContext {
     templateUrl: "pdf-tree.component.html",
     styleUrls: ["pdf-tree.component.scss"],
 })
-export class PdfTreeComponent {
+export class PdfTreeComponent implements OnInit {
 
     public treeControl: FlatTreeControl<Element>;
     public dataSource: MatTreeFlatDataSource<Element, Element>;
@@ -37,15 +41,42 @@ export class PdfTreeComponent {
 
     constructor(
         private database: PdfBuilder,
+        private actions$: Actions,
+        private store: Store<PdfTreeState>
     ) {
         this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
         this.treeControl = new FlatTreeControl<Element>(this.getLevel, this.isExpandable);
         this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
         database.dataChange.subscribe((data) => {
-            this.dataSource.data = [];
-            this.dataSource.data = data;
+
         });
+    }
+
+    ngOnInit() {
+        this.store.subscribe((a) => console.log("STATE CHANGED", a));
+
+        // this.store.pipe(
+        //     select(PdfTreeSelectors.pdfTree),
+        //     filter((tree) => Array.isArray(tree))
+        // ).subscribe(
+        //     (tree) => {
+        //         this.dataSource.data = [];
+        //         this.dataSource.data = tree;
+        //     }
+        // );
+
+        this.dataSource.data = this.database.data;
+
+        // this.actions$.pipe(
+        //     ofType(PdfTreeActions.nodeMoved),
+        // ).subscribe((payload) => {
+        //     if (payload.which) {
+        //         this.treeControl.expandDescendants(payload.which);
+        //     } else {
+        //         // console.warn(`Failed to move item ${payload.which.key}`);
+        //     }
+        // });
     }
 
     public getLevel = (node: Element) => this.contextMap.get(node)?.level || 0;
@@ -125,24 +156,18 @@ export class PdfTreeComponent {
         event.preventDefault();
 
         if (node !== this.dragContext.dragNode) {
-            let moved: Element | null = null;
+            const moving = this.dragContext.dragNode;
 
             switch (this.dragContext.area) {
                 case "above":
                 case "below":
+                    this.store.dispatch(PdfTreeActions.moveAsSibling({ moving, newSibling: node, where: this.dragContext.area }));
                     // this.undo.recordChanges("Moved item");
-                    moved = this.database.moveItemSibling(this.dragContext.dragNode, node, this.dragContext.area as any);
                     break;
                 case "center":
+                    this.store.dispatch(PdfTreeActions.moveInside({ moving, newParent: node }));
                     // this.undo.recordChanges("Moved item");
-                    moved = this.database.moveItem(this.dragContext.dragNode, node);
                     break;
-            }
-
-            if (moved) {
-                this.treeControl.expandDescendants(moved);
-            } else {
-                console.warn(`Failed to move item ${node.key}`);
             }
         }
 

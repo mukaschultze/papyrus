@@ -17,10 +17,10 @@ import { PdfViewerModule } from "ng2-pdf-viewer";
 import { PdfJsViewerModule } from "ng2-pdfjs-viewer";
 import { environment } from "../environments/environment";
 import { AppComponent } from "./app.component";
-import { AppEffects } from "./app.effects";
 import { DevDirective } from "./dev-mode.directive";
 import { PdfTreeComponent } from "./pdf-tree/pdf-tree.component";
-import { reducer, reducerKey } from "./reducers";
+import { PdfTreeEffects } from "./pdf-tree/pdf-tree.effects";
+import { reducer, reducerKey } from "./pdf-tree/pdf-tree.reducer";
 import { SafePipe } from "./safe.pipe";
 
 const reducers = {
@@ -51,7 +51,7 @@ const reducers = {
         MatProgressBarModule,
         MatIconModule,
 
-        EffectsModule.forRoot([AppEffects]),
+        EffectsModule.forRoot([PdfTreeEffects]),
 
         StoreModule.forRoot(reducers, {
             runtimeChecks: {
