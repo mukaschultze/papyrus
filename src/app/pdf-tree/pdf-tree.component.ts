@@ -30,7 +30,7 @@ export class PdfTreeComponent implements OnInit {
         dragNode: Element,
         overNode?: Element,
         holdTime?: number,
-        area?: "above" | "below" | "center",
+        area?: "before" | "after" | "center",
     };
 
     private contextMap = new Map<Element, NodeContext>();
@@ -67,6 +67,40 @@ export class PdfTreeComponent implements OnInit {
         // );
 
         this.dataSource.data = this.database.data;
+
+        this.store.dispatch(PdfTreeActions.setPdf({
+            pdf: {
+                items: [
+                    { key: "1", id: "1", childrenIds: [], parentId: "2", },
+                    { key: "2", id: "2", childrenIds: ["1", "3", "4"] },
+                    { key: "3", id: "3", childrenIds: [], parentId: "2", },
+                    { key: "4", id: "4", childrenIds: [], parentId: "2", },
+                    { key: "5", id: "5", childrenIds: [] },
+                    { key: "6", id: "6", childrenIds: ["7", "8"] },
+                    { key: "7", id: "7", childrenIds: [], parentId: "6", },
+                    { key: "8", id: "8", childrenIds: [], parentId: "6", },
+                ]
+            }
+        }));
+
+        this.store.dispatch(PdfTreeActions.addPdfItem({
+            item: {
+                key: "ok", id: "OKKKK", childrenIds: []
+            },
+            parent: "5"
+        }));
+
+        this.store.dispatch(PdfTreeActions.moveAsSibling({
+            moving: "5",
+            newSibling: "3",
+            where: "after",
+        }));
+
+        this.store.dispatch(PdfTreeActions.moveAsSibling({
+            moving: "6",
+            newSibling: "3",
+            where: "before",
+        }));
 
         // this.actions$.pipe(
         //     ofType(PdfTreeActions.nodeMoved),
@@ -139,9 +173,9 @@ export class PdfTreeComponent implements OnInit {
         const percentageY = event.offsetY / target.clientHeight;
 
         if (percentageY < 0.25) {
-            this.dragContext.area = "above";
+            this.dragContext.area = "before";
         } else if (percentageY > 0.75) {
-            this.dragContext.area = "below";
+            this.dragContext.area = "after";
         } else {
             this.dragContext.area = "center";
         }
@@ -159,13 +193,13 @@ export class PdfTreeComponent implements OnInit {
             const moving = this.dragContext.dragNode;
 
             switch (this.dragContext.area) {
-                case "above":
-                case "below":
-                    this.store.dispatch(PdfTreeActions.moveAsSibling({ moving, newSibling: node, where: this.dragContext.area }));
+                case "before":
+                case "after":
+                    // this.store.dispatch(PdfTreeActions.moveAsSibling({ moving, newSibling: node, where: this.dragContext.area }));
                     // this.undo.recordChanges("Moved item");
                     break;
                 case "center":
-                    this.store.dispatch(PdfTreeActions.moveInside({ moving, newParent: node }));
+                    // this.store.dispatch(PdfTreeActions.moveInside({ moving, newParent: node }));
                     // this.undo.recordChanges("Moved item");
                     break;
             }

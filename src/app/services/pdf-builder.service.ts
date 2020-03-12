@@ -34,7 +34,7 @@ export class PdfBuilder {
         return inserting;
     }
 
-    public insertItemAsSibling(sibling: Element, inserting: Element, where: "above" | "below"): Element | null {
+    public insertItemAsSibling(sibling: Element, inserting: Element, where: "before" | "after"): Element | null {
         const parent = this.getParent(sibling);
 
         if (!parent) {
@@ -48,7 +48,7 @@ export class PdfBuilder {
         }
 
         const siblingIndex = parent.elements.indexOf(sibling);
-        const insertIndex = siblingIndex + (where === "below" ? 1 : 0);
+        const insertIndex = siblingIndex + (where === "after" ? 1 : 0);
         parent.elements.splice(insertIndex, 0, inserting);
         this.dataChange.next(this.data);
         return inserting;
@@ -100,7 +100,7 @@ export class PdfBuilder {
             null;
     }
 
-    public moveItemSibling(moving: Element, newSibling: Element, where: "above" | "below"): Element | null {
+    public moveItemSibling(moving: Element, newSibling: Element, where: "before" | "after"): Element | null {
         return this.deleteItem(moving) ?
             this.insertItemAsSibling(newSibling, moving, where) :
             null;
